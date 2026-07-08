@@ -55,19 +55,33 @@ Built as an HCI (Human-Computer Interaction) coursework project for UCC's health
 ```bash
 # Clone the repository
 git clone <your-repo-url>
-cd smarttriage
+cd SmartTriage-System
 
 # Backend setup
 cd backend
+python -m venv venv
+.\venv\Scripts\activate          # Windows
+# source venv/bin/activate       # macOS/Linux
 pip install -r requirements.txt
 python manage.py migrate
+python manage.py seed_demo
 python manage.py runserver
 
-# Frontend setup
+# Frontend setup (new terminal)
 cd frontend
 npm install
-npm start
+npm run dev
 ```
+
+The frontend runs at `http://localhost:5173` and proxies API requests to Django at `http://127.0.0.1:8000`.
+
+### Demo credentials
+
+| Username  | Password  | Role    |
+|-----------|-----------|---------|
+| student1  | demo1234  | Student |
+| nurse1    | demo1234  | Nurse   |
+| doctor1   | demo1234  | Doctor  |
 
 ## Roles & Access
 
