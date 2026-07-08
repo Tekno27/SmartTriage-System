@@ -55,9 +55,15 @@ def calculate_triage_score(
         "severe_bleeding",
         "loss_of_consciousness",
         "seizure",
+        "allergic_reaction",
+        "injury_trauma",
+    }
+    moderate_symptoms = {
+        "fever", "chills", "stomach_pain", "nausea_vomiting", "diarrhoea", "rash",
     }
     symptom_set = set(symptoms or [])
     score += min(len(symptom_set & urgent_symptoms) * 2, 6)
+    score += min(len(symptom_set & moderate_symptoms), 3)
 
     score = min(score, 10)
 

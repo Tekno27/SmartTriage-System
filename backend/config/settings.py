@@ -29,6 +29,14 @@ INSTALLED_APPS = [
     "visits",
     "pharmacy",
     "billing",
+    "hospital",
+    "appointments",
+    "admissions",
+    "laboratory",
+    "radiology",
+    "inventory",
+    "records",
+    "notifications",
 ]
 
 MIDDLEWARE = [

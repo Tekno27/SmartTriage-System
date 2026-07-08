@@ -3,6 +3,12 @@ from django.db import models
 
 
 class PatientProfile(models.Model):
+    class NHISStatus(models.TextChoices):
+        UNKNOWN = "unknown", "Unknown"
+        ACTIVE = "active", "Active"
+        EXPIRED = "expired", "Expired"
+        PENDING = "pending", "Pending Renewal"
+
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -14,7 +20,15 @@ class PatientProfile(models.Model):
     chronic_conditions = models.TextField(blank=True)
     emergency_contact = models.CharField(max_length=120, blank=True)
     emergency_phone = models.CharField(max_length=20, blank=True)
+    ghana_card_number = models.CharField(max_length=30, blank=True)
     nhis_number = models.CharField(max_length=30, blank=True)
+    nhis_status = models.CharField(
+        max_length=20,
+        choices=NHISStatus.choices,
+        default=NHISStatus.UNKNOWN,
+    )
+    nhis_expiry_date = models.DateField(null=True, blank=True)
+    nhis_verified_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

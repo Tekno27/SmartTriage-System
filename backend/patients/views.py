@@ -8,8 +8,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from accounts.permissions import IsStudent
+from triage.ai_engine import COMMON_SYMPTOMS
 
 from .models import PatientProfile
+from .nhis import apply_nhis_verification, verify_nhis
 from .serializers import PatientProfileSerializer
 
 User = get_user_model()
@@ -22,6 +24,34 @@ class PatientProfileView(generics.RetrieveUpdateAPIView):
     def get_object(self):
         profile, _ = PatientProfile.objects.get_or_create(user=self.request.user)
         return profile
+
+
+class NHISVerifyView(APIView):
+    permission_classes = [IsStudent]
+
+    def post(self, request):
+        nhis_number = request.data.get("nhis_number", "")
+        profile, _ = PatientProfile.objects.get_or_create(user=request.user)
+        result = apply_nhis_verification(profile, nhis_number)
+        result["profile"] = PatientProfileSerializer(profile).data
+        return Response(result)
+
+
+class NHISVerifyPreviewView(APIView):
+    """Check NHIS without saving — used during intake step."""
+
+    permission_classes = [IsStudent]
+
+    def post(self, request):
+        nhis_number = request.data.get("nhis_number", "")
+        return Response(verify_nhis(nhis_number))
+
+
+class CommonSymptomsView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        return Response(COMMON_SYMPTOMS)
 
 
 class QRCheckInView(APIView):

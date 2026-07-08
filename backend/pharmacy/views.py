@@ -2,7 +2,7 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from accounts.permissions import IsDoctor, IsNurseOrDoctor
+from accounts.permissions import IsClinicalOrPharmacist, IsDoctor
 
 from .models import FEFODispenser, Medication, MedicationBatch, Prescription
 from .serializers import (
@@ -15,13 +15,13 @@ from .serializers import (
 class MedicationListView(generics.ListAPIView):
     queryset = Medication.objects.filter(is_active=True)
     serializer_class = MedicationSerializer
-    permission_classes = [IsNurseOrDoctor]
+    permission_classes = [IsClinicalOrPharmacist]
 
 
 class MedicationBatchListView(generics.ListAPIView):
     queryset = MedicationBatch.objects.select_related("medication")
     serializer_class = MedicationBatchSerializer
-    permission_classes = [IsNurseOrDoctor]
+    permission_classes = [IsClinicalOrPharmacist]
 
 
 class PrescriptionCreateView(generics.CreateAPIView):
@@ -35,7 +35,7 @@ class PrescriptionCreateView(generics.CreateAPIView):
 
 class PrescriptionListView(generics.ListAPIView):
     serializer_class = PrescriptionSerializer
-    permission_classes = [IsNurseOrDoctor]
+    permission_classes = [IsClinicalOrPharmacist]
 
     def get_queryset(self):
         queryset = Prescription.objects.select_related("medication", "visit", "prescribed_by")
@@ -46,7 +46,7 @@ class PrescriptionListView(generics.ListAPIView):
 
 
 class DispensePrescriptionView(APIView):
-    permission_classes = [IsNurseOrDoctor]
+    permission_classes = [IsClinicalOrPharmacist]
 
     def post(self, request, pk):
         try:

@@ -13,9 +13,13 @@ class VisitSerializer(serializers.ModelSerializer):
         model = Visit
         fields = [
             "id",
+            "queue_number",
             "patient",
             "chief_complaint",
+            "symptoms",
             "symptoms_description",
+            "pain_level",
+            "nhis_verified",
             "status",
             "triage_score",
             "urgency",
@@ -30,6 +34,7 @@ class VisitSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = [
             "id",
+            "queue_number",
             "patient",
             "triage_score",
             "urgency",
@@ -43,9 +48,24 @@ class VisitSerializer(serializers.ModelSerializer):
 
 
 class VisitCreateSerializer(serializers.ModelSerializer):
+    first_name = serializers.CharField(write_only=True, required=False)
+    last_name = serializers.CharField(write_only=True, required=False)
+    student_id = serializers.CharField(write_only=True, required=False)
+    ghana_card_number = serializers.CharField(write_only=True, required=False)
+    nhis_number = serializers.CharField(write_only=True, required=False)
+
     class Meta:
         model = Visit
-        fields = ["chief_complaint", "symptoms_description"]
+        fields = [
+            "symptoms",
+            "pain_level",
+            "symptoms_description",
+            "first_name",
+            "last_name",
+            "student_id",
+            "ghana_card_number",
+            "nhis_number",
+        ]
 
 
 class VisitUpdateSerializer(serializers.ModelSerializer):
